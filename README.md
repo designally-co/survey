@@ -129,6 +129,23 @@ server-side, and the address itself must end in the domain and be verified. **A 
 refuses to start without those two variables** — a deploy nobody can sign into is worth catching at
 build time.
 
+## Deploying
+
+The app is packaged as a container image: `Dockerfile` builds the Next.js
+standalone output for linux/amd64, `.github/workflows/release.yml` builds and
+tests it on every pull request and publishes it to GHCR as `sha-<full commit>`
+from a `release-*` tag, and `deploy/compose.production.yml` is the Portainer
+stack. `GET /api/health` reports the running revision, the database, the
+migration count and which settings are present — never their values.
+
+Behind a reverse proxy, `AUTH_URL` and `SURVEY_ORIGIN` both have to be set to
+the public origin: the standalone server reports itself as `0.0.0.0:3000`, and
+without them sign-in and the links handed to clients would carry that address.
+
+See [docs/deploy-nas.md](docs/deploy-nas.md) for the move from Vercel to the
+Designally NAS: variables, the one-off migration step, who owns the
+lapsed-survey schedule, cutover, rollback and the smoke suite.
+
 ## Where the build has got to
 
 **Milestones 1 and 2 are done.**

@@ -1,6 +1,9 @@
 /**
  * Applies drizzle/*.sql to whichever database src/lib/db resolved —
- * Supabase when DATABASE_URL is set, PGlite otherwise.
+ * Neon when DATABASE_URL is set, PGlite otherwise.
+ *
+ * For a release, `scripts/migrate-deploy.ts` is the one to run: it ships inside
+ * the container image and needs neither tsx nor this app's database module.
  */
 import { getDb, usingLocalDatabase } from '../src/lib/db';
 
