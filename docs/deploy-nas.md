@@ -43,8 +43,7 @@ the `.vercel.app` address stop working when the project is retired.
 
 ## 2. The image
 
-`ghcr.io/designally-co/designally-platform:sha-<full 40-character commit>`,
-linux/amd64. Built by [`.github/workflows/release.yml`](../.github/workflows/release.yml).
+`ghcr.io/designally-co/survey:sha-<full 40-character commit>`, linux/amd64. Built by [`.github/workflows/release.yml`](../.github/workflows/release.yml).
 
 **On every pull request** the workflow runs lint (reported, not enforced — see
 the note in the workflow), the production build and the type check. It then
@@ -159,7 +158,7 @@ The container never migrates on start; the app has no start-up migration at
 all. Migrations are a one-off command, run with the release's own image:
 
 ```bash
-docker run --rm --env DATABASE_URL ghcr.io/designally-co/designally-platform:sha-<full commit> node --experimental-strip-types scripts/migrate-deploy.ts
+docker run --rm --env DATABASE_URL ghcr.io/designally-co/survey:sha-<full commit> node --experimental-strip-types scripts/migrate-deploy.ts
 ```
 
 `--env DATABASE_URL`, with no `=`, passes the value from the environment it is
@@ -261,6 +260,39 @@ Each step waits for the one before it.
 
 ---
 
+## 8a. Vercel afterwards: the internal clone
+
+Vercel is kept, not deleted. It has two jobs, and they do not overlap in time.
+
+**During the migration it is the rollback.** That means it stays as it is: the
+production database, cron off, and no deploys landing on it. A rollback is then
+one DNS change away.
+
+**After sign-off it becomes a clone** — a running copy of the app to try things
+on. Converting it is four settings, and each one exists to stop the clone
+touching anything real:
+
+| | Clone |
+|---|---|
+| Address | the `*.vercel.app` one only; the public names stay on the NAS |
+| Database | **its own.** A Neon branch is the cheap way here: same schema, separate data |
+| Cron | **off.** Two schedulers on one database is a stop condition, and a clone must not analyse real surveys |
+| Deploys | from `main`, which is what makes it a clone worth having |
+| Access | Vercel's deployment protection on, so it is not a second public copy |
+
+Branch previews stay off (`git.deploymentEnabled` in `vercel.json`): they never
+had the Google credentials to build, and the clone is `main`. That keeps a
+merge deploying the clone while a pull request does not.
+
+**Do not convert it before Ake signs off**, because the day it points at a
+clone database it stops being a rollback.
+
+This app never migrates on deploy, so a Vercel deploy cannot change any schema.
+(Article Studio does, and that step has to go when its own Vercel project
+becomes a clone.)
+
+---
+
 ## 9. Database
 
 Neon stays where it is, and nothing about it changes in this migration: same
@@ -312,7 +344,8 @@ Record counts **before** the DNS change, so "match" means something.
 - [ ] Whether GHCR access already covers this repo's package, or a registry
       credential is needed.
 - [ ] Neon: stay, or plan a separate move to an isolated Supabase project.
-- [ ] The maintenance window, the rollback deadline, and when the Vercel
-      project is deleted.
+- [ ] The maintenance window and the rollback deadline. The Vercel project is
+      kept rather than deleted: after sign-off it becomes the internal clone
+      (§8a), and which database it then points at is the decision to make.
 - [ ] The five pre-existing lint errors, fixed in their own pull request, after
       which the workflow's `continue-on-error` comes off.
