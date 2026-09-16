@@ -9,7 +9,7 @@
 # workflow's run summary. There is no default and never `latest`.
 services:
   app:
-    image: ghcr.io/designally-co/designally-platform:${IMAGE_TAG:?set IMAGE_TAG to sha-<full commit>}
+    image: ghcr.io/designally-co/survey:${IMAGE_TAG:?set IMAGE_TAG to sha-<full commit>}
     container_name: survey
     restart: unless-stopped
     environment:

@@ -43,8 +43,7 @@ the `.vercel.app` address stop working when the project is retired.
 
 ## 2. The image
 
-`ghcr.io/designally-co/designally-platform:sha-<full 40-character commit>`,
-linux/amd64. Built by [`.github/workflows/release.yml`](../.github/workflows/release.yml).
+`ghcr.io/designally-co/survey:sha-<full 40-character commit>`, linux/amd64. Built by [`.github/workflows/release.yml`](../.github/workflows/release.yml).
 
 **On every pull request** the workflow runs lint (reported, not enforced — see
 the note in the workflow), the production build and the type check. It then
@@ -159,7 +158,7 @@ The container never migrates on start; the app has no start-up migration at
 all. Migrations are a one-off command, run with the release's own image:
 
 ```bash
-docker run --rm --env DATABASE_URL ghcr.io/designally-co/designally-platform:sha-<full commit> node --experimental-strip-types scripts/migrate-deploy.ts
+docker run --rm --env DATABASE_URL ghcr.io/designally-co/survey:sha-<full commit> node --experimental-strip-types scripts/migrate-deploy.ts
 ```
 
 `--env DATABASE_URL`, with no `=`, passes the value from the environment it is
