@@ -36,7 +36,22 @@ import { NextResponse, type NextRequest } from 'next/server';
  * session cookie exists, and a cron has no browser.
  */
 const PUBLIC_PREFIXES = ['/s/', '/c/', '/api/s/', '/api/c/', '/api/auth/', '/api/cron/', '/moodboard/'];
-const PUBLIC_EXACT = ['/sign-in'];
+
+/**
+ * `/api/health` is here because a health check carries no session, and gating
+ * it does not merely block it — it makes it lie.
+ *
+ * The container's HEALTHCHECK asks for the route with `wget`, which follows
+ * redirects. Behind this gate it would be sent to `/sign-in`, receive that
+ * page with a 200, and report the container healthy — the exact opposite of
+ * what the check is for, and true even of a container whose database is
+ * unreachable. The same is true of any uptime monitor pointed at it.
+ *
+ * Nothing is exposed by listing it. The route answers presence booleans and
+ * error messages, never a configured value, and it exists to be reachable when
+ * nobody can sign in, which is precisely when it is needed.
+ */
+const PUBLIC_EXACT = ['/sign-in', '/api/health'];
 
 const SESSION_COOKIES = [
   'authjs.session-token',

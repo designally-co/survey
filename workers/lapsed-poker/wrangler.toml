@@ -1,0 +1,32 @@
+# The lapsed-survey clock.
+#
+# WHY THIS EXISTS. `/api/cron/lapsed` writes the analysis for a survey whose
+# date has passed, and it only runs when something calls it. Vercel's cron did
+# that daily while the app was hosted there; on the NAS nothing does, and a
+# survey that lapsed overnight would sit unanalysed until somebody pressed the
+# button by hand.
+#
+# WHY CLOUDFLARE. The bearer token below can spend Anthropic credit, so it
+# belongs in an account this team already owns rather than with a third-party
+# cron service. Cron Triggers also fire on the interval they are given, which
+# is not true of every scheduler — a GitHub Actions schedule set to two-minute
+# intervals for the Article Studio poker was delivered every two to four hours.
+#
+# It calls the PUBLIC hostname (survey.designally.co), so it follows DNS: the
+# same Worker reaches Vercel before the migration and the NAS after it, with no
+# change beyond its URL secret.
+name = "lapsed-poker"
+main = "src/index.ts"
+compatibility_date = "2026-09-16"
+
+# NO PUBLIC URL. This Worker only ever runs on the schedule below — it serves no
+# HTTP routes, so it needs no hostname.
+workers_dev = false
+
+# Daily at 01:00 UTC, which is 08:00 in Bangkok: a survey that lapsed overnight
+# is analysed before the team opens the app, rather than after. This is the
+# schedule Vercel's cron kept, unchanged on purpose — the endpoint is the same
+# one, and it is idempotent, so a second call after a completed run finds
+# nothing to do.
+[triggers]
+crons = ["0 1 * * *"]
