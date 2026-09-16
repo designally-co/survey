@@ -119,6 +119,9 @@
      name — see `.sheet.paper` */
   --white: #ffffff;
   --canvas: var(--white);
+  /* The ground a client answers on. Unchanged: the team app takes Article
+     Studio's #f8f8f7 instead, and it takes it at `.deck` — see the rule beside
+     `.deck.paper`. */
   --parchment: var(--warm-white);
   /**
    * The lower ground *inside* a white box — the same grey, a different job.
@@ -5573,6 +5576,38 @@ dialog[open] > .sheet {
  * untouched: it sets `--parchment` on `.survey-shell` and is flat by decision
  * (DESIGN.md §Two surfaces).
  */
+/**
+ * THE TEAM APP STANDS ON ARTICLE STUDIO'S GROUND — 16 September 2026.
+ *
+ * #f8f8f7, the grey every page in Article Studio sits on, and the one the
+ * sign-in plate is already drawn against. Asked for as the second step of
+ * bringing the three products to one visual language, after the door itself.
+ *
+ * SCOPED TO `.deck`, WHICH IS ONLY THE TEAM PAGE. The questionnaire keeps the
+ * parchment it was designed on: a client answering twenty questions on a phone
+ * is not part of this alignment, and DESIGN.md's reasoning for that screen —
+ * the warm ground, the 17px body — still stands. `.deck` is the team page's
+ * own root in `today.tsx` and appears nowhere else.
+ *
+ * It sets the token rather than a background, so everything on the page that
+ * reads `--parchment` moves with it — the hero's ground, the insight panel's
+ * foot, the collection box — instead of the page changing while its parts
+ * stay behind. `body:has()` carries it out to the edges of the window, the
+ * same trick `.deck.paper` below already uses.
+ */
+.deck {
+  --parchment: #f8f8f7;
+}
+/* `.as-door` is the sign-in page, which is a team screen too — and it paints
+   its own ground, so without this the body behind it stays parchment and shows
+   on an overscroll bounce. */
+body:has(.deck),
+body:has(.as-door) {
+  background: #f8f8f7;
+}
+
+/* `.paper` still wins over the rule above: two classes beat one, and
+   `body:has(.deck.paper)` is likewise the more specific of the two. */
 .deck.paper {
   --parchment: var(--white);
   --canvas: var(--warm-white);
@@ -10143,4 +10178,211 @@ html:has(.signin) {
 .delconfirm .danger:disabled {
   opacity: 0.45;
   cursor: not-allowed;
+}
+
+/* ────────────────────────────────────────────────────────────────────────────
+ * THE TEAM'S DOOR, DRAWN AS ARTICLE STUDIO DRAWS ITS OWN.
+ *
+ * Asked for on 16 September 2026, the day this app moved to the NAS beside
+ * Article Studio. The two internal products share a team, a Workspace and a
+ * single way in, and the request was for the two sign-in screens to be the
+ * same screen — not a family resemblance, the same one.
+ *
+ * SO THIS BLOCK IS DELIBERATELY NOT BUILT FROM THIS APP'S TOKENS. Every value
+ * below is Article Studio's, read off its live page rather than guessed:
+ * the #f8f8f7 ground, the white plate with its #f0f0f0 hairline at a 16px
+ * corner, 28/6/12/32/20px of vertical rhythm, and the 44px accent pill. The
+ * rest of this app stays parchment and orange; the door is the one screen the
+ * two products hold in common, and the one screen nobody is inside yet.
+ *
+ * It is scoped to `.as-door` and touches nothing else. When the palettes are
+ * unified for real, this block goes, and the page picks the tokens back up.
+ *
+ * The typefaces need no special handling: both apps set headings in Zalando
+ * Sans and text in Poppins, and this app already loads both (layout.tsx).
+ * ──────────────────────────────────────────────────────────────────────── */
+.as-door {
+  min-height: 100dvh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #f8f8f7;
+  /* ABOVE CENTRE, NOT ON IT — the same arithmetic Article Studio uses, and the
+     same reason this page's old `.signin` gave: a composition centred by
+     arithmetic reads low, so a tenth of the screen of extra bottom padding
+     lifts the plate to roughly 45% of the window. */
+  padding: 16px 12px calc(16px + 10dvh);
+}
+
+@media (min-width: 640px) {
+  .as-door {
+    padding: 40px 24px calc(40px + 12dvh);
+  }
+}
+
+.as-plate {
+  width: 100%;
+  max-width: 26rem;
+  padding: 24px;
+  border: 1px solid #f0f0f0;
+  border-radius: 16px;
+  background: #ffffff;
+  /* No shadow, as there: on this ground the hairline is what says "object". */
+}
+
+@media (min-width: 640px) {
+  .as-plate {
+    padding: 32px;
+  }
+}
+
+/* The flat mark takes Article Studio's two inks rather than this app's, so the
+   lockup matches the plate it sits on. The geometry is `.dmark`'s own. */
+.as-door .dmark .dm-d {
+  background: #1b1d23;
+}
+.as-door .dmark .dm-dot {
+  background: #c73f29;
+}
+
+.as-eyebrow {
+  margin: 28px 0 0;
+  font-family: var(--font);
+  font-size: 11px;
+  font-weight: 600;
+  /* 1.3333, not this app's 1.44: the eyebrow is one line either way, but its
+     leading sets where it sits above the heading, and the two cards are meant
+     to be the same card. Measured on Article Studio: 14.6667px at 11px. */
+  line-height: 1.33333;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #737373;
+}
+
+.as-title {
+  margin: 6px 0 0;
+  font-family: var(--font-display);
+  font-size: 32px;
+  font-weight: 500;
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+  color: #1a1a1a;
+}
+
+/* 14px AT EVERY WIDTH, which is what Article Studio actually renders.
+   Its markup carries `text-sm sm:text-base`, so this first grew to 16px on a
+   desktop — and then the two decks did not match, which is the whole point of
+   the page. Measured on the live page at 1660px wide it is 14px with 22.75px
+   of leading: the `sm:` step never takes effect there. Copy the rendering,
+   not the class list. */
+.as-deck {
+  margin: 12px 0 0;
+  font-family: var(--font);
+  font-size: 14px;
+  line-height: 1.625;
+  color: #4a4a4a;
+}
+
+/* The one action on the screen, in the accent, at 44px — the height every
+   commit in either product is. */
+.as-cta {
+  margin-top: 32px;
+  width: 100%;
+  height: 44px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  border: 1px solid transparent;
+  border-radius: 8px;
+  background: #ef6148;
+  color: #ffffff;
+  font-family: var(--font);
+  font-size: 13px;
+  font-weight: 600;
+  /* 18.5714px at 13px, as Article Studio's button computes. */
+  line-height: 1.42857;
+  cursor: pointer;
+  transition:
+    background-color 120ms ease-out,
+    transform 120ms ease-out;
+}
+.as-cta:hover {
+  background: #d9482d;
+}
+.as-cta:active {
+  background: #c73f29;
+  transform: scale(0.98);
+}
+.as-cta:focus-visible {
+  outline: none;
+  border-color: #ef6148;
+  box-shadow: 0 0 0 3px rgb(239 97 72 / 0.5);
+}
+.as-cta svg {
+  width: 16px;
+  height: 16px;
+  flex: none;
+}
+
+/* Who may come in, stated under the door rather than discovered at it. */
+.as-foot {
+  margin: 20px 0 0;
+  font-family: var(--font);
+  font-size: 11px;
+  line-height: 1.625;
+  color: #737373;
+}
+
+/* Not a second way in — the state where there is no way in at all. Without it
+   the page renders as a lockup over nothing and the reason lives in a log. */
+.as-note {
+  margin-top: 32px;
+  padding: 14px 16px;
+  border: 1px solid rgb(160 96 0 / 0.3);
+  border-radius: 12px;
+  background: #fff1da;
+  font-family: var(--font);
+  font-size: 14px;
+  line-height: 1.625;
+  color: #4a4a4a;
+  text-align: left;
+}
+.as-note code {
+  font-family: var(--font-mono, ui-monospace, monospace);
+  font-size: 0.9em;
+}
+
+/* The development sign-in, which exists only where there is no OAuth client.
+   Plain fields on the same plate: it is scaffolding, not a designed screen. */
+.as-dev {
+  margin-top: 20px;
+  text-align: left;
+}
+.as-dev label {
+  display: block;
+  margin-bottom: 4px;
+  font-family: var(--font);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #737373;
+}
+.as-dev input {
+  width: 100%;
+  height: 40px;
+  margin-bottom: 12px;
+  padding: 0 12px;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  background: #ffffff;
+  font-family: var(--font);
+  font-size: 14px;
+  color: #1a1a1a;
+}
+.as-dev input:focus-visible {
+  outline: none;
+  border-color: #ef6148;
+  box-shadow: 0 0 0 3px rgb(239 97 72 / 0.2);
 }

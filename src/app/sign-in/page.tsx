@@ -1,85 +1,76 @@
 import { redirect } from 'next/navigation';
 
-import Mark from '../mark';
+import { FlatMark } from '../mark';
 import { auth, signIn, ALLOWED_DOMAIN, devSignInEnabled, hasGoogleCredentials } from '@/auth';
 
 export const dynamic = 'force-dynamic';
 
+/**
+ * The door, drawn as Article Studio draws its own.
+ *
+ * **Changed on 16 September 2026, asked for.** It was this product's own
+ * graphic — the Cut laid horizontally with the Point on it, on parchment — and
+ * that was the right screen while the two internal apps lived in different
+ * places. They now sit on one server, behind one Workspace, with one way in
+ * for the same five people, and the request was for the two doors to be the
+ * same door rather than cousins.
+ *
+ * So the composition is Article Studio's, to the colour: the grey ground, one
+ * white plate with a hairline, the flat mark, an eyebrow, the product in the
+ * display face, one line saying what it is for, and the accent pill. The
+ * values live in `.as-door` in globals.css, which says why they are hard-coded
+ * rather than taken from this app's tokens.
+ *
+ * WHAT DID NOT CHANGE. Google SSO on a Designally Workspace account is still
+ * the only way in, the development sign-in still exists only where no OAuth
+ * client does, and both still refuse any address outside the domain.
+ */
 export default async function SignIn(props: PageProps<'/sign-in'>) {
   const session = await auth();
   const { from } = await props.searchParams;
-  const target = typeof from === 'string' && from.startsWith('/') ? from : '/';
+  // A path inside this app, never an absolute URL — an open redirect on a
+  // sign-in page hands somebody else's site the trust of this domain.
+  const target =
+    typeof from === 'string' && from.startsWith('/') && !from.startsWith('//') ? from : '/';
 
   if (session?.user) redirect(target);
 
   return (
-    /* `deck paper` — the door stands on the same ground as the room. Without it
-       this page kept the old grammar, a white card on a grey page, while the app
-       behind it and every sheet in it had inverted. See `.deck.paper`. */
-    <main className="signin deck paper">
-      <div className="card">
-        {/**
-         * The Cut, with the Point on it.
-         *
-         * The page had a mark floating over centred type and read as a form
-         * with a logo above it. This is the brand's own graphic instead of
-         * decoration: the same rule and the same disc the questionnaire is
-         * built on, laid horizontally and running the full width of the
-         * window. The door and the survey now rhyme, which is the one thing a
-         * sign-in screen for *this* product should do.
-         *
-         * The line is the same orange as the disc, so it reads as coming out of
-         * it rather than passing behind it.
-         */}
-        <div className="sl-cut">
-          <Mark size={60} />
-        </div>
+    <main className="as-door">
+      <section aria-labelledby="signin-title" className="as-plate">
+        {/* The flat mark: the D in ink, the full stop in the accent. The disc
+            version is heavier than anything else here, and the plate is
+            already the object. */}
+        <FlatMark size={36} />
 
-        {/**
-         * The lockup. Company in display, product beneath it.
-         *
-         * The two lines were held at one size to avoid a kicker; with the
-         * hierarchy opened up they are a name and its subject instead — the
-         * company carries the display weight and the product is set small and
-         * widely tracked under it, which is a lockup rather than a label over a
-         * heading.
-         */}
-        {/* One line. It was set as a two-tier lockup — the company large, the
-            product small and tracked underneath — which made a name into a
-            heading with a label under it. `Designally&rsquo;s Survey Platform`
-            is the name, so it is one string at one size, and it wraps like a
-            sentence rather than breaking into tiers. A true apostrophe, not the
-            typewriter one. */}
-        <h1 className="sl-lockup">Designally&rsquo;s Survey Platform</h1>
+        <p className="as-eyebrow">Designally</p>
+        <h1 id="signin-title" className="as-title">
+          Survey Platform
+        </h1>
+        {/* What the platform is for, in the one place the team sees it stated.
+            A summary read *before* the answers, not instead of them — the team
+            still sees every answer, which is the promise this can keep. */}
+        <p className="as-deck">The summary you read before the answers.</p>
 
-        {/**
-         * What the platform is for, in the one place the team sees it.
-         *
-         * Not "instant insights from a lot of responses", which was the first
-         * wording and is untrue twice over: PRODUCT.md records that one
-         * respondent is the normal case rather than the degenerate one, and two
-         * passes of Opus take about three minutes — see `maxDuration` on the
-         * team page. The reading this saves is twenty-one long answers, not
-         * twenty-one people.
-         *
-         * It also stops short of claiming to replace the reading, because
-         * CLAUDE.md's milestone 3 is explicit that the engine "does not read the
-         * answers for them" and the team still sees every answer. A summary read
-         * *before* them is the promise the product actually keeps.
-         */}
-        <p className="sl-line">The summary you read before the answers.</p>
-
-        {hasGoogleCredentials && (
+        {hasGoogleCredentials ? (
           <form
             action={async () => {
               'use server';
               await signIn('google', { redirectTo: target });
             }}
           >
-            <button className="sl-cta" type="submit">
+            <button className="as-cta" type="submit">
+              <GoogleGlyph />
               Continue with Google
             </button>
           </form>
+        ) : devSignInEnabled ? null : (
+          <p className="as-note">
+            <strong>Sign-in is not configured.</strong> Set <code>AUTH_GOOGLE_ID</code> and{' '}
+            <code>AUTH_GOOGLE_SECRET</code>, and add this origin&rsquo;s{' '}
+            <code>/api/auth/callback/google</code> to the OAuth client&rsquo;s authorised redirect
+            URIs.
+          </p>
         )}
 
         {devSignInEnabled && (
@@ -93,37 +84,43 @@ export default async function SignIn(props: PageProps<'/sign-in'>) {
               });
             }}
           >
-            <p className="warn">
-              <b>Development sign-in.</b> No Google OAuth client is configured, so this stands in
-              for it. It is not built into a production bundle, and it still refuses any address
-              outside {ALLOWED_DOMAIN}.
+            <p className="as-note">
+              <strong>Development sign-in.</strong> No Google OAuth client is configured, so this
+              stands in for it. It is not built into a production bundle, and it still refuses any
+              address outside {ALLOWED_DOMAIN}.
             </p>
-            <div className="field">
-              <label className="f" htmlFor="dev-email">
-                Email
-              </label>
+            <div className="as-dev">
+              <label htmlFor="dev-email">Email</label>
               <input
                 id="dev-email"
                 name="email"
                 type="email"
-                className="input"
                 required
                 defaultValue={`you@${ALLOWED_DOMAIN}`}
               />
+              <label htmlFor="dev-name">Name</label>
+              <input id="dev-name" name="name" type="text" defaultValue="Khun Nan" />
             </div>
-            <div className="field">
-              <label className="f" htmlFor="dev-name">
-                Name
-              </label>
-              <input id="dev-name" name="name" type="text" className="input" defaultValue="Khun Nan" />
-            </div>
-            <button className="btn btn-primary" type="submit">
+            <button className="as-cta" type="submit">
               Sign in
             </button>
           </form>
         )}
-      </div>
 
+        {/* Who can come in, stated under the door rather than discovered at it:
+            a personal Google account gets as far as the consent screen and is
+            turned away, which is a worse place to learn the rule. */}
+        <p className="as-foot">Designally Google Workspace accounts only.</p>
+      </section>
     </main>
+  );
+}
+
+/** Google's mark, one colour, at the size the button's other glyphs are. */
+function GoogleGlyph() {
+  return (
+    <svg aria-hidden viewBox="0 0 24 24" fill="currentColor">
+      <path d="M23.5 12.3c0-.8-.1-1.6-.2-2.3H12v4.4h6.5c-.3 1.5-1.1 2.8-2.4 3.6v3h3.9c2.3-2.1 3.5-5.2 3.5-8.7zM12 24c3.2 0 6-1.1 7.9-2.9l-3.9-3c-1.1.7-2.4 1.2-4 1.2-3.1 0-5.7-2.1-6.7-4.9H1.4v3.1C3.4 21.4 7.4 24 12 24zM5.3 14.4c-.2-.7-.4-1.5-.4-2.4s.1-1.6.4-2.4V6.5H1.4C.5 8.2 0 10 0 12s.5 3.8 1.4 5.5l3.9-3.1zM12 4.7c1.8 0 3.3.6 4.6 1.8l3.4-3.4C18 1.2 15.2 0 12 0 7.4 0 3.4 2.6 1.4 6.5l3.9 3.1c1-2.8 3.6-4.9 6.7-4.9z" />
+    </svg>
   );
 }
