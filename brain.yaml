@@ -76,36 +76,47 @@ features:
 
 tables:
   - name: users
+    schema: survey
     description: Team members who have signed in.
     sensitive: false
   - name: clients
+    schema: survey
     description: Client companies (name only).
     sensitive: false
   - name: projects
+    schema: survey
     description: One row per client project, with its package and archive gate.
     sensitive: false
   - name: question_blocks
+    schema: survey
     description: Groups of questions (identity, strategy, project, visual; some retired).
     sensitive: false
   - name: questions
+    schema: survey
     description: Every question in English and Thai, with its type, settings and version.
     sensitive: false
   - name: surveys
+    schema: survey
     description: One survey per project, with its link token, date and closing gate.
     sensitive: false
   - name: responses
+    schema: survey
     description: One row per person who answered, with their name, role and email.
     sensitive: false
   - name: answers
+    schema: survey
     description: The client's answers, one row per question.
     sensitive: false
   - name: survey_drafts
+    schema: survey
     description: Part-finished answers saved per device while a client is answering.
     sensitive: false
   - name: insights
+    schema: survey
     description: The analysis of a project's answers, every version kept.
     sensitive: false
   - name: decisions
+    schema: survey
     description: Retired on 17 August 2026 with the kick-off. Kept, empty.
     sensitive: false
 
