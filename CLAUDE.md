@@ -234,6 +234,16 @@ These are product decisions, not preferences. If a request conflicts with one, s
 
 ## Data model
 
+**Every table is in the Postgres schema `survey`, not `public`** (migration
+0004, 14 October 2026), and so is the migrations' history
+(`survey.__drizzle_migrations`; it was `drizzle.__drizzle_migrations` before).
+The survey is moving into Project Friday, the company's one Supabase project,
+where `users`, `projects` and `decisions` already exist for other apps, and
+where the app will connect as a user that can reach `survey` only. Drizzle
+qualifies every table it writes; raw SQL must name tables through the schema
+objects (for example `${surveys}` inside a `sql` template), never bare. See
+`decisions/tables-in-schema-survey.md`.
+
 Seed data for every question block — bilingual, with per-type config — is in `seed/question-blocks.json`.
 Do not retype the questions; import that file.
 

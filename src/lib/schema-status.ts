@@ -32,7 +32,8 @@ export async function checkSchema(db: Awaited<ReturnType<typeof getDb>>): Promis
   const expected = expectedMigrationCount;
   try {
     const result = await db.execute(
-      sql`select count(*)::int as applied from drizzle."__drizzle_migrations"`,
+      // The history lives beside the tables since migration 0004.
+      sql`select count(*)::int as applied from survey."__drizzle_migrations"`,
     );
     // postgres-js returns the rows directly; PGlite wraps them in `.rows`.
     const rows = (Array.isArray(result) ? result : (result as { rows?: unknown[] }).rows) ?? [];
