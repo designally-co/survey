@@ -119,6 +119,10 @@ tables:
     schema: survey
     description: Retired on 17 August 2026 with the kick-off. Kept, empty.
     sensitive: false
+  - name: __drizzle_migrations
+    schema: survey
+    description: The database updates (migrations) applied so far, kept by Drizzle. In the schema drizzle until 2026-10-14.
+    sensitive: false
 
 connections: []
 
