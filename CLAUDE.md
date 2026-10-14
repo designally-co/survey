@@ -10,7 +10,7 @@ Read `PRODUCT.md` for users, purpose and design principles. Read `DESIGN.md` for
 
 - Next.js 14+ (App Router), TypeScript, `src/` directory
 - Tailwind CSS
-- Drizzle ORM + **Neon Postgres**
+- Drizzle ORM + **Postgres in Project Friday** (Supabase; Neon until 14 October 2026)
 - **Google OAuth, restricted to the designally.co domain** — no other sign-in method
 - Vercel deployment
 - Anthropic API for analysis (server-side only, never exposed to the client)
@@ -54,6 +54,13 @@ against `DATABASE_URL`, so the host is a one-line change.
 `docs/first-session-brief.md` recommended Neon at the outset for a third reason — it is the
 cleanest fit with Vercel and Drizzle. Nothing about the schema, the migrations or the driver
 changes; only `DATABASE_URL`.
+
+**Moved 14 October 2026 — into Project Friday.** The company combines every database into
+Project Friday, its one Supabase project (P Aek's decision). The tables are in the schema
+`survey` and the app logs in as `survey_app`, which reaches nothing else. Both August reasons
+changed: Friday is never quiet for seven days (other apps and a timer use it all day), and the
+project slots are no longer the question. The steps are in the designally-brain repo,
+`docs/app-moves.md`; the reasoning is in `decisions/neon-not-supabase.md`.
 
 **Do not import theme, tokens, or components from Knowledge Hub or Content Generator.** Those projects share the stack but not the design system, and neither has a settled one. This project defines its own in `DESIGN.md` and is the reference going forward.
 

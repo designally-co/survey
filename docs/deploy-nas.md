@@ -132,7 +132,7 @@ production environment. They never pass through Git, tickets or chat.
 | Name | Required | Notes |
 |---|---|---|
 | `IMAGE_TAG` | yes | `sha-<full commit>` from the release run summary. |
-| `DATABASE_URL` | yes | Neon, the **pooled** connection string. |
+| `DATABASE_URL` | yes | Project Friday's **session pooler** string for the user `survey_app` (from 14 October 2026; Neon's pooled string before). |
 | `AUTH_SECRET` | yes | **Copy the exact value.** A different one signs everybody out. |
 | `AUTH_GOOGLE_ID` | yes | The existing OAuth client. |
 | `AUTH_GOOGLE_SECRET` | yes | The existing OAuth client. |

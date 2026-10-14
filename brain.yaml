@@ -25,7 +25,7 @@ summary: >
 stack:
   - Next.js
   - Drizzle ORM
-  - PostgreSQL (Neon)
+  - PostgreSQL (Supabase)
   - Auth.js (Google sign-in)
   - Claude API
   - Tailwind CSS
@@ -34,7 +34,7 @@ stack:
 
 live_url: https://survey.designally.co
 repo_url: https://github.com/designally-co/survey
-supabase_project_ref:
+supabase_project_ref: urzwmhoujpphumruhgkv
 
 features:
   - name: Client questionnaire
