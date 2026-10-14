@@ -7,6 +7,7 @@ sources:
   - https://github.com/designally-co/survey/blob/8138b0ea4240133a123fac53b6deff802c013d61/CLAUDE.md?plain=1#L40-L56
   - "Buk, 2026-10-09 (P Aek decided that every Supabase project is combined into Project Friday, the company's one project)"
   - "Buk, 2026-10-14 (P Aek agreed to move the survey's database from Neon into Project Friday)"
+  - "Buk, 2026-10-14 (asked to do the clean-up the same day and to delete both Neon projects)"
   - decisions/tables-in-schema-survey.md
   - https://github.com/designally-co/designally-brain/blob/b2d79d1ad83b3fe3287e4605b96f63a91258e70b/docs/app-moves.md
 ---
@@ -17,7 +18,7 @@ The app needs only a Postgres connection string. Sign-in is Google OAuth inside 
 
 ## Decision
 
-Since 2026-10-14 the database is in Project Friday, the company's one Supabase project: the tables in the schema `survey`, and the app logs in as `survey_app`, a user that owns `survey` and can read nothing else. The app still talks to it through postgres-js against `DATABASE_URL`. The data was copied from Neon in one transaction by the brain repo's "App move" workflow, after a rehearsal, and every table was compared; the NAS stack's `DATABASE_URL` then pointed at Friday, `/api/health` said schema 5 of 5, and Friday held the same rows as Neon. Neon stays untouched for about a week as the way back.
+Since 2026-10-14 the database is in Project Friday, the company's one Supabase project: the tables in the schema `survey`, and the app logs in as `survey_app`, a user that owns `survey` and can read nothing else. The app still talks to it through postgres-js against `DATABASE_URL`. The data was copied from Neon in one transaction by the brain repo's "App move" workflow, after a rehearsal, and every table was compared; the NAS stack's `DATABASE_URL` then pointed at Friday, `/api/health` said schema 5 of 5, and Friday held the same rows as Neon. Neon was deleted the same day, at Buk's request, after a new run of Friday's encrypted backup held the schema `survey` (262 tables restored, 0 missing) and nothing had been written to Neon since the copy.
 
 ## Why
 
