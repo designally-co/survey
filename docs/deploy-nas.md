@@ -350,7 +350,7 @@ Record counts **before** the DNS change, so "match" means something.
       at about 67 MB with no limit set.
 - [ ] Whether GHCR access already covers this repo's package, or a registry
       credential is needed.
-- [ ] Neon: stay, or plan a separate move to an isolated Supabase project.
+- [x] Neon: the database moved into Project Friday on 14 October 2026 and the Neon project was deleted the same day (`decisions/neon-not-supabase.md`).
 - [ ] The maintenance window and the rollback deadline. The Vercel project is
       kept rather than deleted: after sign-off it becomes the internal clone
       (§8a), and which database it then points at is the decision to make.
