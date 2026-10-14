@@ -9,6 +9,8 @@ sources:
   - "Buk, 2026-10-14 (P Aek agreed to move the survey's database from Neon into Project Friday)"
   - decisions/tables-in-schema-survey.md
   - https://github.com/designally-co/designally-brain/blob/b2d79d1ad83b3fe3287e4605b96f63a91258e70b/docs/app-moves.md
+  - "Buk, 2026-10-14 (Neon is already removed)"
+  - "Neon connector, 2026-10-14: survey-platform listed only as deleted, deleted_at 2026-10-14T06:03:28Z, recoverable_until 2026-10-21T06:03:28Z"
 ---
 
 ## Context
@@ -17,7 +19,7 @@ The app needs only a Postgres connection string. Sign-in is Google OAuth inside 
 
 ## Decision
 
-Since 2026-10-14 the database is in Project Friday, the company's one Supabase project: the tables in the schema `survey`, and the app logs in as `survey_app`, a user that owns `survey` and can read nothing else. The app still talks to it through postgres-js against `DATABASE_URL`. The data was copied from Neon in one transaction by the brain repo's "App move" workflow, after a rehearsal, and every table was compared; the NAS stack's `DATABASE_URL` then pointed at Friday, `/api/health` said schema 5 of 5, and Friday held the same rows as Neon. Neon stays untouched for about a week as the way back.
+Since 2026-10-14 the database is in Project Friday, the company's one Supabase project: the tables in the schema `survey`, and the app logs in as `survey_app`, a user that owns `survey` and can read nothing else. The app still talks to it through postgres-js against `DATABASE_URL`. The data was copied from Neon in one transaction by the brain repo's "App move" workflow, after a rehearsal, and every table was compared; the NAS stack's `DATABASE_URL` then pointed at Friday, `/api/health` said schema 5 of 5, and Friday held the same rows as Neon. The same day, once the app ran on Friday, Neon's project `survey-platform` was deleted (2026-10-14 06:03 UTC). Neon keeps a deleted project recoverable for 7 days, until 2026-10-21 06:03 UTC; after that, the way back is Project Friday's nightly encrypted backup (02:30 Bangkok), which dumps every non-Supabase schema, so `survey` is in it from the first run after the move.
 
 ## Why
 
