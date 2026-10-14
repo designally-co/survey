@@ -20,7 +20,7 @@ Two packages: **Brand** (Brand Strategy + Brand Identity, 23 questions) and **De
 | | |
 |---|---|
 | Stack | Next.js 14 App Router · TypeScript · Tailwind · Drizzle |
-| Database | Neon Postgres |
+| Database | Postgres in Project Friday (Supabase), schema `survey`; Neon until 2026-10-14 |
 | Login | Google OAuth, designally.co only |
 | Survey links | `s.designally.co/s/<token>` |
 | Hosting | Vercel |
