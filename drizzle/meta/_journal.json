@@ -29,6 +29,13 @@
       "when": 1786935522801,
       "tag": "0003_optimal_sugar_man",
       "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1792000000000,
+      "tag": "0004_tables_in_schema_survey",
+      "breakpoints": true
     }
   ]
 }

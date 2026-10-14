@@ -9,4 +9,8 @@ export default {
   schema: './src/lib/db/schema.ts',
   out: './drizzle',
   dialect: 'postgresql',
+  // Every table and the migrations' history are in the schema `survey`
+  // (decisions/tables-in-schema-survey.md).
+  schemaFilter: ['survey'],
+  migrations: { schema: 'survey' },
 } satisfies Config;

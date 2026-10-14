@@ -167,8 +167,15 @@ history.
 
 **Ake approves** each run against production. Before it: a verified backup, and
 the migration count from `/api/health` (`schema.applied`). After it,
-`schema.applied` must equal `schema.expected`. This pull request adds no
-migrations; production has 4.
+`schema.applied` must equal `schema.expected`.
+
+**Migration 0004 moves every table from `public` to `survey`**
+(`decisions/tables-in-schema-survey.md`). Run it the same way as any other,
+with the image of the release that ships it, and only then switch the stack to
+that image: an older image looks for its tables in `public` and finds none, and
+the new image against an unmigrated database looks in `survey`. The same run
+copies the migration history from `drizzle` to `survey` first, so only 0004 is
+applied. Afterwards `schema.applied` is 5.
 
 Vercel deploys from `main` today and applies nothing — this app has never
 migrated on deploy — so there is no second owner to switch off.

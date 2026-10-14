@@ -16,16 +16,27 @@ import {
   boolean,
   integer,
   jsonb,
-  pgTable,
+  pgSchema,
   text,
   timestamp,
   unique,
   uuid,
 } from 'drizzle-orm/pg-core';
 
+/**
+ * Every table lives in the Postgres schema `survey`, not `public`
+ * (decisions/tables-in-schema-survey.md). The survey is moving into Project
+ * Friday, the company's one Supabase project, where other apps' tables sit
+ * beside these — `users`, `projects` and `decisions` exist there too — and
+ * where the app connects as a user that can reach `survey` only. Drizzle
+ * qualifies every table it writes (`"survey"."surveys"`); raw SQL must name
+ * tables through these objects, never bare.
+ */
+export const surveySchema = pgSchema('survey');
+
 /* ── team ─────────────────────────────────────────────────────────── */
 
-export const users = pgTable('users', {
+export const users = surveySchema.table('users', {
   id: uuid('id').primaryKey().defaultRandom(),
   email: text('email').notNull().unique(),
   name: text('name').notNull(),
@@ -34,7 +45,7 @@ export const users = pgTable('users', {
 
 /* ── clients and projects ─────────────────────────────────────────── */
 
-export const clients = pgTable('clients', {
+export const clients = surveySchema.table('clients', {
   id: uuid('id').primaryKey().defaultRandom(),
   name: text('name').notNull(),
   /**
@@ -61,7 +72,7 @@ export const clients = pgTable('clients', {
 export const PACKAGES = ['brand', 'design'] as const;
 export type Package = (typeof PACKAGES)[number];
 
-export const projects = pgTable('projects', {
+export const projects = surveySchema.table('projects', {
   id: uuid('id').primaryKey().defaultRandom(),
   clientId: uuid('client_id')
     .notNull()
@@ -118,7 +129,7 @@ export const BLOCK_KEYS = [
 ] as const;
 export type BlockKey = (typeof BLOCK_KEYS)[number];
 
-export const questionBlocks = pgTable('question_blocks', {
+export const questionBlocks = surveySchema.table('question_blocks', {
   id: uuid('id').primaryKey().defaultRandom(),
   key: text('key').$type<BlockKey>().notNull().unique(),
   nameEn: text('name_en').notNull(),
@@ -170,7 +181,7 @@ export type QuestionConfig = {
   triggers?: Record<string, BlockKey>;
 };
 
-export const questions = pgTable(
+export const questions = surveySchema.table(
   'questions',
   {
     id: uuid('id').primaryKey().defaultRandom(),
@@ -201,7 +212,7 @@ export const questions = pgTable(
 export const SURVEY_KINDS = ['discovery'] as const;
 export type SurveyKind = (typeof SURVEY_KINDS)[number];
 
-export const surveys = pgTable('surveys', {
+export const surveys = surveySchema.table('surveys', {
   id: uuid('id').primaryKey().defaultRandom(),
   projectId: uuid('project_id')
     .notNull()
@@ -238,7 +249,7 @@ export const surveys = pgTable('surveys', {
   closedBy: uuid('closed_by').references(() => users.id),
 });
 
-export const responses = pgTable('responses', {
+export const responses = surveySchema.table('responses', {
   id: uuid('id').primaryKey().defaultRandom(),
   surveyId: uuid('survey_id')
     .notNull()
@@ -265,7 +276,7 @@ export type AnswerValue =
   | { kind: 'multi'; choices: string[]; other?: string }
   | { kind: 'scale'; points: number; values: Record<string, number> };
 
-export const answers = pgTable('answers', {
+export const answers = surveySchema.table('answers', {
   id: uuid('id').primaryKey().defaultRandom(),
   responseId: uuid('response_id')
     .notNull()
@@ -282,7 +293,7 @@ export const answers = pgTable('answers', {
  * browser's localStorage. Drafts are never promoted to responses automatically;
  * only a submit writes a response.
  */
-export const surveyDrafts = pgTable(
+export const surveyDrafts = surveySchema.table(
   'survey_drafts',
   {
     id: uuid('id').primaryKey().defaultRandom(),
@@ -312,7 +323,7 @@ export const surveyDrafts = pgTable(
  * has to be told that is a rename rather than a drop of a table with real
  * analyses in it, which it can only ask in an interactive terminal.
  */
-export const insights = pgTable('insights', {
+export const insights = surveySchema.table('insights', {
   id: uuid('id').primaryKey().defaultRandom(),
   projectId: uuid('project_id')
     .notNull()
@@ -364,7 +375,7 @@ export const insights = pgTable('insights', {
  * columns had never gone. An empty table costs nothing to keep and a migration
  * to remove.
  */
-export const decisions = pgTable('decisions', {
+export const decisions = surveySchema.table('decisions', {
   id: uuid('id').primaryKey().defaultRandom(),
   projectId: uuid('project_id')
     .notNull()
