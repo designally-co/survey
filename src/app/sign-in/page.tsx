@@ -38,10 +38,13 @@ export default async function SignIn(props: PageProps<'/sign-in'>) {
   return (
     <main className="as-door">
       <section aria-labelledby="signin-title" className="as-plate">
-        {/* The wordmark, in place of the flat mark and the "Designally"
-            eyebrow together: the word says both. Article Studio's plate does
-            the same. */}
-        <Wordmark width={150} />
+        {/* The brand on a strip of its own, then the task: heading, deck,
+            button — Article Studio's plate does the same. The wordmark takes
+            the place of the flat mark and the "Designally" eyebrow together:
+            the word says both. */}
+        <div className="as-brand">
+          <Wordmark width={112} />
+        </div>
         <h1 id="signin-title" className="as-title">
           Survey Platform
         </h1>

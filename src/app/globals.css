@@ -10214,6 +10214,25 @@ html:has(.signin) {
   }
 }
 
+/* THE WORDMARK GETS ITS OWN ZONE. Set in the stack, a heavy caps word over
+   the 32px title read as a second heading. Here it heads the plate on a strip
+   bled to the plate's edges over a hairline: the brand is who is asking, the
+   title and the button below are the task. The strip runs out to the plate's
+   padding (24, 32 from 640px) by negative margin, so the hairline meets the
+   border. At 112 its caps stand about half the title's. */
+.as-brand {
+  margin: -24px -24px 0;
+  padding: 20px 24px;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+@media (min-width: 640px) {
+  .as-brand {
+    margin: -32px -32px 0;
+    padding: 20px 32px;
+  }
+}
+
 /* The wordmark takes Article Studio's two inks rather than this app's, so the
    lockup matches the plate it sits on. */
 .as-door .dwordmark {
