@@ -1055,28 +1055,6 @@ textarea {
  * did not have to change to fix one lockup.
  */
 /**
- * The mark, in its disc — what `.wordmark` used to be.
- *
- * `DESIGNALLY.` set in caps with an orange full stop was the identity in four
- * places and is not an approved lockup; it went on 19 August 2026. The three
- * numbers here are the survey disc's own, so this is the same object rather
- * than a second drawing of it — see `.qdisc.markdisc img`, where 56% and
- * `translate(5%, -1%)` were measured.
- *
- * The diameter is a custom property the component sets, because the callers
- * want different sizes of one thing: 30px inline in the toolbar, 44px standing
- * alone on the sign-in card and on the survey's dead ends.
- */
-.brandmark {
-  display: inline-grid;
-  place-items: center;
-  flex: none;
-  width: var(--brandmark-size, 30px);
-  height: var(--brandmark-size, 30px);
-  border-radius: var(--r-pill);
-  background: var(--primary);
-}
-/**
  * The mark without its disc — see `FlatMark` in `mark.tsx` for why it exists
  * and how the two layers are cut apart.
  *
@@ -1109,18 +1087,18 @@ textarea {
   background: var(--primary-mark);
   clip-path: inset(0 0 0 73.79%);
 }
-
-.brandmark img {
-  width: 56%;
-  height: auto;
+/* The wordmark in the flat mark's two colours — see `Wordmark` in mark.tsx. */
+.dwordmark {
   display: block;
-  transform: translate(5%, -1%);
+  flex: none;
+  height: auto;
+  color: var(--ink);
+  --wordmark-dot: var(--primary-mark);
 }
-/* On the survey's two dead ends it is a block above the headline rather than
-   an inline lockup in a bar — the same job `.slidemain .wordmark` did. */
-.sform .head .brandmark,
-.slidemain .brandmark {
-  display: grid;
+
+/* On the survey's two dead ends the wordmark is a block above the headline
+   rather than an inline lockup in a bar. */
+.sform .head .dwordmark {
   margin-bottom: 26px;
 }
 .sform .head .proj {
@@ -10236,31 +10214,34 @@ html:has(.signin) {
   }
 }
 
-/* The flat mark takes Article Studio's two inks rather than this app's, so the
-   lockup matches the plate it sits on. The geometry is `.dmark`'s own. */
-.as-door .dmark .dm-d {
-  background: #1b1d23;
-}
-.as-door .dmark .dm-dot {
-  background: #c73f29;
+/* THE WORDMARK GETS ITS OWN ZONE. Set in the stack, a heavy caps word over
+   the 32px title read as a second heading. Here it heads the plate on a strip
+   bled to the plate's edges over a hairline: the brand is who is asking, the
+   title and the button below are the task. The strip runs out to the plate's
+   padding (24, 32 from 640px) by negative margin, so the hairline meets the
+   border. At 112 its caps stand about half the title's. */
+.as-brand {
+  margin: -24px -24px 0;
+  padding: 20px 24px;
+  border-bottom: 1px solid #f0f0f0;
 }
 
-.as-eyebrow {
-  margin: 28px 0 0;
-  font-family: var(--font);
-  font-size: 11px;
-  font-weight: 600;
-  /* 1.3333, not this app's 1.44: the eyebrow is one line either way, but its
-     leading sets where it sits above the heading, and the two cards are meant
-     to be the same card. Measured on Article Studio: 14.6667px at 11px. */
-  line-height: 1.33333;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: #737373;
+@media (min-width: 640px) {
+  .as-brand {
+    margin: -32px -32px 0;
+    padding: 20px 32px;
+  }
+}
+
+/* The wordmark takes Article Studio's two inks rather than this app's, so the
+   lockup matches the plate it sits on. */
+.as-door .dwordmark {
+  color: #1b1d23;
+  --wordmark-dot: #c73f29;
 }
 
 .as-title {
-  margin: 6px 0 0;
+  margin: 28px 0 0;
   font-family: var(--font-display);
   font-size: 32px;
   font-weight: 500;

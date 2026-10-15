@@ -1,11 +1,11 @@
-import Mark from '../../mark';
+import { Wordmark } from '../../mark';
 
 export default function NotFound() {
   return (
     <div className="survey-shell client-surface">
       <div className="sform">
         <div className="head">
-          <Mark size={44} />
+          <Wordmark width={150} />
         </div>
         <div className="step">
           <h1>We can&apos;t find that questionnaire.</h1>
