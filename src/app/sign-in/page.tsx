@@ -1,6 +1,6 @@
 import { redirect } from 'next/navigation';
 
-import { FlatMark } from '../mark';
+import { Wordmark } from '../mark';
 import { auth, signIn, ALLOWED_DOMAIN, devSignInEnabled, hasGoogleCredentials } from '@/auth';
 
 export const dynamic = 'force-dynamic';
@@ -38,12 +38,10 @@ export default async function SignIn(props: PageProps<'/sign-in'>) {
   return (
     <main className="as-door">
       <section aria-labelledby="signin-title" className="as-plate">
-        {/* The flat mark: the D in ink, the full stop in the accent. The disc
-            version is heavier than anything else here, and the plate is
-            already the object. */}
-        <FlatMark size={36} />
-
-        <p className="as-eyebrow">Designally</p>
+        {/* The wordmark, in place of the flat mark and the "Designally"
+            eyebrow together: the word says both. Article Studio's plate does
+            the same. */}
+        <Wordmark width={150} />
         <h1 id="signin-title" className="as-title">
           Survey Platform
         </h1>

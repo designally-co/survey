@@ -1,4 +1,4 @@
-import Mark from '../../mark';
+import { Wordmark } from '../../mark';
 
 /**
  * Shown when a survey resolves to no questions — the questionnaire it was sent
@@ -10,7 +10,7 @@ export default function NotReady({ clientName }: { clientName: string }) {
     <div className="survey-shell client-surface">
       <div className="sform">
         <div className="head">
-          <Mark size={44} />
+          <Wordmark width={150} />
           <span className="proj">{clientName}</span>
         </div>
         <div className="step">
